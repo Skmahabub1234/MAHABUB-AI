@@ -8,137 +8,174 @@
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#071426;color:white;
+ margin:0;background:#101827;color:#fff;
  font-family:Arial,sans-serif;
- min-height:100vh;text-align:center;
 }
 header{
- padding:22px;background:#102746;
- font-size:23px;font-weight:bold;
- color:#55c8ff;
+ background:#172438;padding:17px;
+ display:flex;align-items:center;justify-content:space-between;
+ border-bottom:1px solid #34445b;
 }
-main{padding:25px 18px}
+.logo{font-size:21px;font-weight:bold;color:#55baff}
+.menu{font-size:25px;cursor:pointer}
+.container{max-width:850px;margin:auto;padding:15px}
+.welcome{text-align:center;padding:35px 10px 20px}
 .orb{
- width:165px;height:165px;border-radius:50%;
- margin:45px auto 25px;
- background:radial-gradient(circle,#9ceaff,#1474d4,#071426);
- box-shadow:0 0 45px #168eff;
- animation:pulse 2s infinite;
+ width:90px;height:90px;border-radius:50%;
+ margin:auto auto 18px;
+ background:radial-gradient(circle,#a9f2ff,#168bff,#112b54);
+ box-shadow:0 0 35px #168bff;
 }
-@keyframes pulse{
- 50%{box-shadow:0 0 75px #20aaff}
+.welcome h2{color:#66c5ff}
+.welcome p{color:#aabbd0}
+#chat{
+ min-height:45vh;padding:10px 0 100px;
 }
-h2{color:#61caff}
-#status{color:#a9c8e8;min-height:30px}
-button{
- border:0;border-radius:14px;padding:15px 22px;
- margin:8px;font-size:16px;font-weight:bold;
- background:#168bea;color:white;
+.message{
+ padding:14px;margin:12px 0;
+ border-radius:15px;line-height:1.7;
+ white-space:pre-wrap;
 }
-button:active{opacity:.7}
-#answer{
- margin:22px auto;padding:18px;
- background:#102746;border-radius:15px;
- min-height:65px;line-height:1.7;
+.user{background:#244d78;margin-left:35px}
+.bot{background:#1d2b40;margin-right:20px}
+.input-area{
+ position:fixed;bottom:0;left:0;right:0;
+ background:#101827;padding:12px;
+ border-top:1px solid #34445b;
+}
+.input-inner{
+ max-width:850px;margin:auto;display:flex;
+ gap:8px;align-items:center;
 }
 input{
- width:100%;padding:15px;border-radius:12px;
- border:1px solid #438ac2;background:#102746;
- color:white;font-size:16px;
+ flex:1;min-width:0;padding:15px;
+ border:1px solid #45617e;border-radius:15px;
+ background:#1d2b40;color:white;font-size:16px;
 }
-small{color:#9ab3ce}
+button{
+ border:0;border-radius:13px;padding:13px;
+ background:#168bea;color:white;font-size:16px;
+}
+button:active{opacity:.7}
+#status{text-align:center;color:#91b1d0;font-size:12px}
 </style>
 </head>
 <body>
-<header>✦ MAHABUB AI ✦</header>
-<main>
- <div class="orb"></div>
- <h2>আপনার ব্যক্তিগত AI</h2>
- <p id="status">আমি আপনার কথা শুনতে প্রস্তুত।</p>
 
- <button onclick="listen()">🎙️ কথা বলুন</button>
+<header>
+ <span class="logo">✦ MAHABUB AI</span>
+ <span class="menu" onclick="clearChat()">＋</span>
+</header>
 
- <div id="answer">
-  আসসালামু আলাইকুম! আমি MAHABUB AI।
+<div class="container">
+ <div class="welcome" id="welcome">
+  <div class="orb"></div>
+  <h2>স্বাগতম MAHABUB AI</h2>
+  <p>আমি আপনার ব্যক্তিগত AI সহকারী।</p>
+  <p>আপনি কী জানতে চান?</p>
  </div>
 
- <input id="question" placeholder="আপনার প্রশ্ন লিখুন...">
- <button onclick="ask()">পাঠান</button>
- <button onclick="speakAnswer()">🔊 উত্তর শুনুন</button>
- <br><br>
- <small>MAHABUB AI - Version 1.0</small>
-</main>
+ <div id="chat"></div>
+</div>
+
+<div class="input-area">
+ <div id="status">MAHABUB AI প্রস্তুত</div>
+ <div class="input-inner">
+  <button onclick="listen()">🎙️</button>
+  <input id="question" placeholder="এখানে প্রশ্ন লিখুন..."
+   onkeydown="if(event.key==='Enter')send()">
+  <button onclick="send()">➤</button>
+ </div>
+</div>
 
 <script>
-let reply="আসসালামু আলাইকুম! আমি মাহাবুব এ আই।";
+const chat=document.getElementById("chat");
 
-function show(text){
- reply=text;
- document.getElementById("answer").innerText=text;
+function addMessage(text,type){
+ const div=document.createElement("div");
+ div.className="message "+type;
+ div.textContent=text;
+ chat.appendChild(div);
+ window.scrollTo(0,document.body.scrollHeight);
 }
 
-function ask(){
- let q=document.getElementById("question").value.trim();
+function answer(q){
+ const s=q.toLowerCase();
+
+ if(s.includes("নাম"))
+  return "আমার নাম MAHABUB AI।";
+ if(s.includes("হ্যালো")||s.includes("হাই"))
+  return "হ্যালো! আপনাকে MAHABUB AI-তে স্বাগতম।";
+ if(s.includes("কেমন আছ"))
+  return "আমি ভালো আছি। আপনি কেমন আছেন?";
+ if(s.includes("বাংলাদেশ"))
+  return "বাংলাদেশ দক্ষিণ এশিয়ার একটি স্বাধীন দেশ।";
+ if(s.includes("তোমাকে কে বানিয়েছে"))
+  return "আমাকে MAHABUB AI নামে তৈরি করা হচ্ছে।";
+ if(s.includes("ধন্যবাদ"))
+  return "আপনাকেও ধন্যবাদ!";
+ return "আপনার প্রশ্নটি পেয়েছি: "+q+
+ "\n\nএটি এখন ডেমো সংস্করণ। প্রকৃত AI উত্তর পেতে অনুমোদিত AI মডেল ও নিরাপদ সার্ভার সংযোগ প্রয়োজন।";
+}
+
+function send(){
+ const input=document.getElementById("question");
+ const q=input.value.trim();
  if(!q)return;
 
- if(q.includes("হ্যালো")||q.includes("হাই")){
-  show("হ্যালো! আমি MAHABUB AI। আপনাকে কীভাবে সাহায্য করব?");
- }
- else if(q.includes("নাম")){
-  show("আমার নাম MAHABUB AI।");
- }
- else if(q.includes("লাইট")){
-  show("লাইট নিয়ন্ত্রণের ব্যবস্থা এখনো যুক্ত করা হয়নি।");
- }
- else if(q.includes("ফ্যান")){
-  show("ফ্যান নিয়ন্ত্রণের ব্যবস্থা এখনো যুক্ত করা হয়নি।");
- }
- else{
-  show("আপনার প্রশ্নটি বুঝেছি: "+q+
-  "। আমার পূর্ণ AI মডেল এখনো যুক্ত করা হয়নি।");
- }
- document.getElementById("question").value="";
+ document.getElementById("welcome").style.display="none";
+ addMessage(q,"user");
+ input.value="";
+
+ setTimeout(()=>{
+  const a=answer(q);
+  addMessage(a,"bot");
+  window.lastAnswer=a;
+ },400);
 }
 
-function speakAnswer(){
- let speech=new SpeechSynthesisUtterance(reply);
- speech.lang="bn-BD";
- speechSynthesis.speak(speech);
+function speak(){
+ if(!window.lastAnswer)return;
+ const u=new SpeechSynthesisUtterance(window.lastAnswer);
+ u.lang="bn-BD";
+ speechSynthesis.speak(u);
 }
 
 function listen(){
- const SpeechRecognition=
- window.SpeechRecognition||window.webkitSpeechRecognition;
-
- if(!SpeechRecognition){
-  show("আপনার ব্রাউজারে ভয়েস রিকগনিশন সমর্থিত নয়।");
+ const SR=window.SpeechRecognition||
+          window.webkitSpeechRecognition;
+ if(!SR){
+  document.getElementById("status").innerText=
+   "এই ব্রাউজারে ভয়েস সুবিধা নেই।";
   return;
  }
-
- const rec=new SpeechRecognition();
- rec.lang="bn-BD";
- rec.interimResults=false;
-
- document.getElementById("status").innerText="আমি শুনছি...";
-
- rec.onresult=function(e){
-  let words=e.results[0][0].transcript;
-  document.getElementById("question").value=words;
-  document.getElementById("status").innerText="আপনার কথা পেয়েছি।";
-  ask();
-  speakAnswer();
+ const r=new SR();
+ r.lang="bn-BD";
+ r.onstart=()=>{
+  document.getElementById("status").innerText="শুনছি...";
  };
-
- rec.onerror=function(){
-  document.getElementById("status").innerText="আবার চেষ্টা করুন।";
+ r.onresult=e=>{
+  document.getElementById("question").value=
+   e.results[0][0].transcript;
+  send();
  };
-
- rec.onend=function(){
-  document.getElementById("status").innerText="আমি প্রস্তুত।";
+ r.onerror=()=>{
+  document.getElementById("status").innerText=
+   "মাইক্রোফোন অনুমতি পরীক্ষা করুন।";
  };
+ r.onend=()=>{
+  document.getElementById("status").innerText=
+   "MAHABUB AI প্রস্তুত";
+ };
+ r.start();
+}
 
- rec.start();
+function clearChat(){
+ chat.innerHTML="";
+ document.getElementById("welcome").style.display="block";
+ window.lastAnswer="";
 }
 </script>
+
 </body>
 </html>
