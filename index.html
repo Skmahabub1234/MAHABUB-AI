@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAHABUB AI</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#071426;color:white;
+ font-family:Arial,sans-serif;
+ min-height:100vh;text-align:center;
+}
+header{
+ padding:22px;background:#102746;
+ font-size:23px;font-weight:bold;
+ color:#55c8ff;
+}
+main{padding:25px 18px}
+.orb{
+ width:165px;height:165px;border-radius:50%;
+ margin:45px auto 25px;
+ background:radial-gradient(circle,#9ceaff,#1474d4,#071426);
+ box-shadow:0 0 45px #168eff;
+ animation:pulse 2s infinite;
+}
+@keyframes pulse{
+ 50%{box-shadow:0 0 75px #20aaff}
+}
+h2{color:#61caff}
+#status{color:#a9c8e8;min-height:30px}
+button{
+ border:0;border-radius:14px;padding:15px 22px;
+ margin:8px;font-size:16px;font-weight:bold;
+ background:#168bea;color:white;
+}
+button:active{opacity:.7}
+#answer{
+ margin:22px auto;padding:18px;
+ background:#102746;border-radius:15px;
+ min-height:65px;line-height:1.7;
+}
+input{
+ width:100%;padding:15px;border-radius:12px;
+ border:1px solid #438ac2;background:#102746;
+ color:white;font-size:16px;
+}
+small{color:#9ab3ce}
+</style>
+</head>
+<body>
+<header>✦ MAHABUB AI ✦</header>
+<main>
+ <div class="orb"></div>
+ <h2>আপনার ব্যক্তিগত AI</h2>
+ <p id="status">আমি আপনার কথা শুনতে প্রস্তুত।</p>
+
+ <button onclick="listen()">🎙️ কথা বলুন</button>
+
+ <div id="answer">
+  আসসালামু আলাইকুম! আমি MAHABUB AI।
+ </div>
+
+ <input id="question" placeholder="আপনার প্রশ্ন লিখুন...">
+ <button onclick="ask()">পাঠান</button>
+ <button onclick="speakAnswer()">🔊 উত্তর শুনুন</button>
+ <br><br>
+ <small>MAHABUB AI - Version 1.0</small>
+</main>
+
+<script>
+let reply="আসসালামু আলাইকুম! আমি মাহাবুব এ আই।";
+
+function show(text){
+ reply=text;
+ document.getElementById("answer").innerText=text;
+}
+
+function ask(){
+ let q=document.getElementById("question").value.trim();
+ if(!q)return;
+
+ if(q.includes("হ্যালো")||q.includes("হাই")){
+  show("হ্যালো! আমি MAHABUB AI। আপনাকে কীভাবে সাহায্য করব?");
+ }
+ else if(q.includes("নাম")){
+  show("আমার নাম MAHABUB AI।");
+ }
+ else if(q.includes("লাইট")){
+  show("লাইট নিয়ন্ত্রণের ব্যবস্থা এখনো যুক্ত করা হয়নি।");
+ }
+ else if(q.includes("ফ্যান")){
+  show("ফ্যান নিয়ন্ত্রণের ব্যবস্থা এখনো যুক্ত করা হয়নি।");
+ }
+ else{
+  show("আপনার প্রশ্নটি বুঝেছি: "+q+
+  "। আমার পূর্ণ AI মডেল এখনো যুক্ত করা হয়নি।");
+ }
+ document.getElementById("question").value="";
+}
+
+function speakAnswer(){
+ let speech=new SpeechSynthesisUtterance(reply);
+ speech.lang="bn-BD";
+ speechSynthesis.speak(speech);
+}
+
+function listen(){
+ const SpeechRecognition=
+ window.SpeechRecognition||window.webkitSpeechRecognition;
+
+ if(!SpeechRecognition){
+  show("আপনার ব্রাউজারে ভয়েস রিকগনিশন সমর্থিত নয়।");
+  return;
+ }
+
+ const rec=new SpeechRecognition();
+ rec.lang="bn-BD";
+ rec.interimResults=false;
+
+ document.getElementById("status").innerText="আমি শুনছি...";
+
+ rec.onresult=function(e){
+  let words=e.results[0][0].transcript;
+  document.getElementById("question").value=words;
+  document.getElementById("status").innerText="আপনার কথা পেয়েছি।";
+  ask();
+  speakAnswer();
+ };
+
+ rec.onerror=function(){
+  document.getElementById("status").innerText="আবার চেষ্টা করুন।";
+ };
+
+ rec.onend=function(){
+  document.getElementById("status").innerText="আমি প্রস্তুত।";
+ };
+
+ rec.start();
+}
+</script>
+</body>
+</html>
