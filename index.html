@@ -100,24 +100,31 @@ function addMessage(text,type){
 }
 
 function answer(q){
+
+function answer(q){
  const s=q.toLowerCase();
 
- if(s.includes("নাম"))
+ if(s.includes("রাজধানী") && s.includes("বাংলাদেশ"))
+  return "বাংলাদেশের রাজধানীর নাম ঢাকা।";
+
+ if(s.includes("তোমার নাম") || s.includes("আপনার নাম"))
   return "আমার নাম MAHABUB AI।";
- if(s.includes("হ্যালো")||s.includes("হাই"))
-  return "হ্যালো! আপনাকে MAHABUB AI-তে স্বাগতম।";
+
+ if(s.includes("হ্যালো") || s.includes("হাই"))
+  return "হ্যালো! আপনাকে স্বাগতম।";
+
  if(s.includes("কেমন আছ"))
-  return "আমি ভালো আছি। আপনি কেমন আছেন?";
+  return "আমি ভালো আছি। আপনাকে কীভাবে সাহায্য করতে পারি?";
+
  if(s.includes("বাংলাদেশ"))
   return "বাংলাদেশ দক্ষিণ এশিয়ার একটি স্বাধীন দেশ।";
- if(s.includes("তোমাকে কে বানিয়েছে"))
-  return "আমাকে MAHABUB AI নামে তৈরি করা হচ্ছে।";
+
  if(s.includes("ধন্যবাদ"))
   return "আপনাকেও ধন্যবাদ!";
- return "আপনার প্রশ্নটি পেয়েছি: "+q+
- "\n\nএটি এখন ডেমো সংস্করণ। প্রকৃত AI উত্তর পেতে অনুমোদিত AI মডেল ও নিরাপদ সার্ভার সংযোগ প্রয়োজন।";
-}
 
+ return "দুঃখিত, এই প্রশ্নের উত্তর আমার ডেমো সংস্করণে নেই।";
+}
+ 
 function send(){
  const input=document.getElementById("question");
  const q=input.value.trim();
